@@ -12,13 +12,13 @@ import javax.script.ScriptEngineManager
 
 
 class MainActivity : AppCompatActivity() {
+    var expression = ""
+    var answer = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
-    var expression = ""
-    var answer = 0
 
     fun numberEntry(view: View) {
         if (resultView.getText().toString() == "0" || answer == 0) {
@@ -37,13 +37,14 @@ class MainActivity : AppCompatActivity() {
         answer = 1
         val calcText = resultView.getText().toString()
         if (calcText == "0") expression = "0"
-        val last_item = calcText.substring(calcText.length - 1)
+        val lastItem = calcText.substring(calcText.length - 1)
 
-        if (input == "AC") {
+
+        if (input == "AC" || calcText == "Infinity") {
             resultView.setText("0")
             expression = ""
         } else {
-            if (last_item in "÷+-×%.") {
+            if (lastItem in "÷+-×%.") {
                 resultView.setText(calcText.substring(0, calcText.length - 1))
                 expression = "" + expression.substring(0, expression.length - 1)
             }
@@ -79,21 +80,17 @@ class MainActivity : AppCompatActivity() {
                 val mgr = ScriptEngineManager()
                 val engine = mgr.getEngineByName("rhino")
 
-                println("Hello1,   $expression")
                 try {
-                    val result = engine.eval(expression)
-                    resultView.text = result.toString()
-
-//                    val longResult = result.toLong()
-//                    if (result == longResult.toDouble()) resultView.text = longResult.toString()
-//                    else {
-//                        result = Math.round(result*10000000000)/10000000000.0
-//                        resultView.text = result.toString()
-//                    }
+                    val result = engine.eval(expression).toString().toDouble()
+                    val longResult = result.toLong()
+                    if (result == longResult.toDouble())
+                        resultView.text = longResult.toString()
+                    else
+                        resultView.text = result.toString()
                     expression = resultView.getText().toString()
                     answer = 0
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Error!!", Toast.LENGTH_LONG).show()
                 }
 
             }
