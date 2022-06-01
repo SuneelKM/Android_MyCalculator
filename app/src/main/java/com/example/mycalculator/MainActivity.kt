@@ -6,8 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import net.objecthunter.exp4j.ExpressionBuilder
-import java.lang.ArithmeticException
+
+
+import javax.script.ScriptEngineManager
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,7 +66,6 @@ class MainActivity : AppCompatActivity() {
             } else if (input == ".") {
                 resultView.append(".")
                 expression += "."
-
             } else if (input == "⌫") {
                 if (calcText.length == 1) {
                     resultView.setText("0")
@@ -75,19 +75,25 @@ class MainActivity : AppCompatActivity() {
                     expression = "" + expression.substring(0, expression.length - 1)
                 }
             } else if (input == "=") {
+
+                val mgr = ScriptEngineManager()
+                val engine = mgr.getEngineByName("rhino")
+
+                println("Hello1,   $expression")
                 try {
-                    val statement = ExpressionBuilder(expression).build()
-                    var result = statement.evaluate()
-                    val longResult = result.toLong()
-                    if (result == longResult.toDouble()) resultView.text = longResult.toString()
-                    else {
-                        result = Math.round(result*10000000000)/10000000000.0
-                        resultView.text = result.toString()
-                    }
+                    val result = engine.eval(expression)
+                    resultView.text = result.toString()
+
+//                    val longResult = result.toLong()
+//                    if (result == longResult.toDouble()) resultView.text = longResult.toString()
+//                    else {
+//                        result = Math.round(result*10000000000)/10000000000.0
+//                        resultView.text = result.toString()
+//                    }
                     expression = resultView.getText().toString()
                     answer = 0
-                } catch (e: ArithmeticException) {
-                    Toast.makeText(this, "Can't divide by zero.", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Error!", Toast.LENGTH_LONG).show()
                 }
 
             }
