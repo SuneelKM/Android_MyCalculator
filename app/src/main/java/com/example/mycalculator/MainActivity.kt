@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             resultView.setText("0")
             expression = ""
         } else {
-            if ((lastItem in "÷+-×%") && (input != ".")) {
+            if ((lastItem in "÷+-×") && (input != ".")) {
                 resultView.setText(calcText.substring(0, calcText.length - 1))
                 expression = "" + expression.substring(0, expression.length - 1)
             }
@@ -59,20 +59,21 @@ class MainActivity : AppCompatActivity() {
             } else if (input == "×") {
                 resultView.append("×")
                 expression += "*"
-            } else if (input == "%") {
-                resultView.append("%")
-                expression += "*0.01*"
+            } else if (input == "00") {
+                if(calcText!="0") {
+                    resultView.append("00")
+                    expression += "00"
+                }
             } else if (input == ".") {
                 var l = calcText.length - 1
-
-                if (calcText[l] in "÷×%-+") {
+                if (calcText[l] in "÷×-+") {
                     resultView.append("0.")
                     expression += "0."
                 } else {
                     while (l > 0) {
                         if (calcText[l] == '.') {
                             break
-                        } else if (calcText[l] in "÷+-×%") {
+                        } else if (calcText[l] in "÷+-×") {
                             resultView.append(".")
                             expression += "."
                             break
@@ -84,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                     resultView.append(".")
                     expression += "."
                 }
-
             } else if (input == "⌫") {
                 if (calcText.length == 1) {
                     resultView.setText("0")
@@ -94,12 +94,13 @@ class MainActivity : AppCompatActivity() {
                     expression = "" + expression.substring(0, expression.length - 1)
                 }
             } else if (input == "=") {
-
                 val mgr = ScriptEngineManager()
                 val engine = mgr.getEngineByName("rhino")
+                println("Hello1   $expression")
 
                 try {
                     val result = engine.eval(expression).toString().toDouble()
+                    println("Hello2   $result")
                     val longResult = result.toLong()
                     if (result == longResult.toDouble())
                         resultView.text = longResult.toString()
