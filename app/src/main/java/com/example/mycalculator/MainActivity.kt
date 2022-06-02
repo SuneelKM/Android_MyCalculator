@@ -43,11 +43,10 @@ class MainActivity : AppCompatActivity() {
             resultView.setText("0")
             expression = ""
         } else {
-            if (lastItem in "÷+-×%.") {
+            if ((lastItem in "÷+-×%") && (input != ".")) {
                 resultView.setText(calcText.substring(0, calcText.length - 1))
                 expression = "" + expression.substring(0, expression.length - 1)
             }
-
             if (input == "÷") {
                 resultView.append("÷")
                 expression += "/"
@@ -64,8 +63,28 @@ class MainActivity : AppCompatActivity() {
                 resultView.append("%")
                 expression += "*0.01*"
             } else if (input == ".") {
-                resultView.append(".")
-                expression += "."
+                var l = calcText.length - 1
+
+                if (calcText[l] in "÷×%-+") {
+                    resultView.append("0.")
+                    expression += "0."
+                } else {
+                    while (l > 0) {
+                        if (calcText[l] == '.') {
+                            break
+                        } else if (calcText[l] in "÷+-×%") {
+                            resultView.append(".")
+                            expression += "."
+                            break
+                        }
+                        l--
+                    }
+                }
+                if (l == 0) {
+                    resultView.append(".")
+                    expression += "."
+                }
+
             } else if (input == "⌫") {
                 if (calcText.length == 1) {
                     resultView.setText("0")
