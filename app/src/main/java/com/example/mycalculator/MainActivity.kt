@@ -21,14 +21,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun numberEntry(view: View) {
-        if (resultView.getText().toString() == "0" || answer == 0) {
+        val input = (view as Button).text
+        val calcText = resultView.getText().toString()
+        if (calcText == "0" || answer == 0) {
             expression = ""
-            resultView.setText((view as Button).text)
+            resultView.setText(input)
             answer = 1
+            expression += input
         } else {
-            resultView.append((view as Button).text)
+            var l = calcText.length - 1
+            if (calcText[l] == '0' && calcText[l - 1] in "÷×-+") {
+                resultView.setText(calcText.substring(0, calcText.length - 1))
+                expression = "" + expression.substring(0, expression.length - 1)
+            }
+            resultView.append(input)
+            expression += input
+
         }
-        expression += (view as Button).text
+    }
+
+    fun doubleZero(view: View) {
+        val input = (view as Button).text
+        val calcText = resultView.getText().toString()
+        var l = calcText.length - 1
+        if (answer == 0) {
+            resultView.setText("0")
+            expression = "0"
+        } else {
+            if (calcText != "0") {
+                if (calcText[l] !in "0÷×-+" || (calcText[l] == '0' && calcText[l - 1] !in "÷×-+")) {
+                    resultView.append(input)
+                    expression += input
+                } else if (calcText[l] in "÷×-+") {
+                    resultView.append("0")
+                    expression += "0"
+                }
+            }
+        }
+
     }
 
     fun operation(view: View) {
@@ -39,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         if (calcText == "0") expression = "0"
         val lastItem = calcText.substring(calcText.length - 1)
 
-        if (input == "AC" || calcText == "Infinity") {
+        if (input == "AC" || calcText == "Infinity" || calcText == "NaN") {
             resultView.setText("0")
             expression = ""
         } else {
@@ -59,11 +89,6 @@ class MainActivity : AppCompatActivity() {
             } else if (input == "×") {
                 resultView.append("×")
                 expression += "*"
-            } else if (input == "00") {
-                if(calcText!="0") {
-                    resultView.append("00")
-                    expression += "00"
-                }
             } else if (input == ".") {
                 var l = calcText.length - 1
                 if (calcText[l] in "÷×-+") {
