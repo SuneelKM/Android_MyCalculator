@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 import javax.script.ScriptEngineManager
 
 
@@ -36,28 +35,31 @@ class MainActivity : AppCompatActivity() {
             }
             resultView.append(input)
             expression += input
-
         }
     }
 
     fun doubleZero(view: View) {
-        val input = (view as Button).text
-        val calcText = resultView.getText().toString()
-        var l = calcText.length - 1
-        if (answer == 0) {
-            resultView.setText("0")
-            expression = "0"
-        } else {
-            if (calcText != "0") {
-                if (calcText[l] !in "0÷×-+" || (calcText[l] == '0' && calcText[l - 1] !in "÷×-+")) {
-                    resultView.append(input)
-                    expression += input
-                } else if (calcText[l] in "÷×-+") {
-                    resultView.append("0")
-                    expression += "0"
-                }
-            }
-        }
+        (view as Button).text = "0"
+        numberEntry(view)
+        numberEntry(view)
+        view.text = "00"
+//        val input = (view as Button).text
+//        val calcText = resultView.getText().toString()
+//        var l = calcText.length - 1
+//        if (answer == 0) {
+//            resultView.setText("0")
+//            expression = "0"
+//        } else {
+//            if (calcText != "0") {
+//                if (calcText[l] !in "0÷×-+" || (calcText[l] == '0' && calcText[l - 1] !in "÷×-+")) {
+//                    resultView.append(input)
+//                    expression += input
+//                } else if (calcText[l] in "÷×-+") {
+//                    resultView.append("0")
+//                    expression += "0"
+//                }
+//            }
+//        }
 
     }
 
