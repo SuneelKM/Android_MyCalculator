@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         if (calcText == "0") expression = "0"
         val lastItem = calcText.substring(calcText.length - 1)
 
-
         if (input == "AC" || calcText == "Infinity") {
             resultView.setText("0")
             expression = ""
