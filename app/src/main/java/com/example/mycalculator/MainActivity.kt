@@ -43,24 +43,6 @@ class MainActivity : AppCompatActivity() {
         numberEntry(view)
         numberEntry(view)
         view.text = "00"
-//        val input = (view as Button).text
-//        val calcText = resultView.getText().toString()
-//        var l = calcText.length - 1
-//        if (answer == 0) {
-//            resultView.setText("0")
-//            expression = "0"
-//        } else {
-//            if (calcText != "0") {
-//                if (calcText[l] !in "0÷×-+" || (calcText[l] == '0' && calcText[l - 1] !in "÷×-+")) {
-//                    resultView.append(input)
-//                    expression += input
-//                } else if (calcText[l] in "÷×-+") {
-//                    resultView.append("0")
-//                    expression += "0"
-//                }
-//            }
-//        }
-
     }
 
     fun operation(view: View) {
@@ -123,11 +105,9 @@ class MainActivity : AppCompatActivity() {
             } else if (input == "=") {
                 val mgr = ScriptEngineManager()
                 val engine = mgr.getEngineByName("rhino")
-                println("Hello1   $expression")
 
                 try {
                     val result = engine.eval(expression).toString().toDouble()
-                    println("Hello2   $result")
                     val longResult = result.toLong()
                     if (result == longResult.toDouble())
                         resultView.text = longResult.toString()
