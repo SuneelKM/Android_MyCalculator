@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                     if (result == longResult.toDouble())
                         resultView.text = longResult.toString()
                     else
-                        resultView.text = result.toString()
+                        resultView.text = result.toFloat().toString()
                     expression = resultView.getText().toString()
                     answer = 0
                 } catch (e: Exception) {
