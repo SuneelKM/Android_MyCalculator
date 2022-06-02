@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         if (calcText == "0" || answer == 0) {
             expression = ""
             resultView.setText(input)
-            answer = 1
             expression += input
+            answer = 1
         } else {
             var l = calcText.length - 1
             if (calcText[l] == '0' && calcText[l - 1] in "÷×-+") {
@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun operation(view: View) {
-
         val input = (view as Button).text
         answer = 1
         val calcText = resultView.getText().toString()
