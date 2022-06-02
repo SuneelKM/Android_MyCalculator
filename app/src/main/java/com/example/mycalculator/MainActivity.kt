@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 import javax.script.ScriptEngineManager
 
 
@@ -21,14 +20,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun numberEntry(view: View) {
-        if (resultView.getText().toString() == "0" || answer == 0) {
+        val input = (view as Button).text
+        val calcText = resultView.getText().toString()
+        if (calcText == "0" || answer == 0) {
             expression = ""
-            resultView.setText((view as Button).text)
+            resultView.setText(input)
             answer = 1
+            expression += input
         } else {
-            resultView.append((view as Button).text)
+            var l = calcText.length - 1
+            if (calcText[l] == '0' && calcText[l - 1] in "÷×-+") {
+                resultView.setText(calcText.substring(0, calcText.length - 1))
+                expression = "" + expression.substring(0, expression.length - 1)
+            }
+            resultView.append(input)
+            expression += input
         }
-        expression += (view as Button).text
+    }
+
+    fun doubleZero(view: View) {
+        (view as Button).text = "0"
+        numberEntry(view)
+        numberEntry(view)
+        view.text = "00"
     }
 
     fun operation(view: View) {
@@ -39,11 +53,11 @@ class MainActivity : AppCompatActivity() {
         if (calcText == "0") expression = "0"
         val lastItem = calcText.substring(calcText.length - 1)
 
-        if (input == "AC" || calcText == "Infinity") {
+        if (input == "AC" || calcText == "Infinity" || calcText == "NaN") {
             resultView.setText("0")
             expression = ""
         } else {
-            if ((lastItem in "÷+-×%") && (input != ".")) {
+            if ((lastItem in "÷+-×") && (input != ".")) {
                 resultView.setText(calcText.substring(0, calcText.length - 1))
                 expression = "" + expression.substring(0, expression.length - 1)
             }
@@ -59,20 +73,16 @@ class MainActivity : AppCompatActivity() {
             } else if (input == "×") {
                 resultView.append("×")
                 expression += "*"
-            } else if (input == "%") {
-                resultView.append("%")
-                expression += "*0.01*"
             } else if (input == ".") {
                 var l = calcText.length - 1
-
-                if (calcText[l] in "÷×%-+") {
+                if (calcText[l] in "÷×-+") {
                     resultView.append("0.")
                     expression += "0."
                 } else {
                     while (l > 0) {
                         if (calcText[l] == '.') {
                             break
-                        } else if (calcText[l] in "÷+-×%") {
+                        } else if (calcText[l] in "÷+-×") {
                             resultView.append(".")
                             expression += "."
                             break
@@ -84,7 +94,6 @@ class MainActivity : AppCompatActivity() {
                     resultView.append(".")
                     expression += "."
                 }
-
             } else if (input == "⌫") {
                 if (calcText.length == 1) {
                     resultView.setText("0")
@@ -94,7 +103,6 @@ class MainActivity : AppCompatActivity() {
                     expression = "" + expression.substring(0, expression.length - 1)
                 }
             } else if (input == "=") {
-
                 val mgr = ScriptEngineManager()
                 val engine = mgr.getEngineByName("rhino")
 
