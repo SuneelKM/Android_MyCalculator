@@ -11,8 +11,8 @@ import javax.script.ScriptEngineManager
 
 
 class MainActivity : AppCompatActivity() {
-    var expression = ""
-    var answer = 0
+    private var expression = ""
+    private var answer = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,16 +21,16 @@ class MainActivity : AppCompatActivity() {
 
     fun numberEntry(view: View) {
         val input = (view as Button).text
-        val calcText = resultView.getText().toString()
+        val calcText = resultView.text.toString()
         if (calcText == "0" || answer == 0) {
             expression = ""
-            resultView.setText(input)
+            resultView.text = input
             expression += input
             answer = 1
         } else {
-            var l = calcText.length - 1
+            val l = calcText.length - 1
             if (calcText[l] == '0' && calcText[l - 1] in "÷×-+") {
-                resultView.setText(calcText.substring(0, calcText.length - 1))
+                resultView.text = calcText.substring(0, calcText.length - 1)
                 expression = "" + expression.substring(0, expression.length - 1)
             }
             resultView.append(input)
@@ -42,22 +42,22 @@ class MainActivity : AppCompatActivity() {
         (view as Button).text = "0"
         numberEntry(view)
         numberEntry(view)
-        view.text = "00"
+        view.text = getString(R.string.Zeros)
     }
 
     fun operation(view: View) {
         val input = (view as Button).text
         answer = 1
-        val calcText = resultView.getText().toString()
+        val calcText = resultView.text.toString()
         if (calcText == "0") expression = "0"
         val lastItem = calcText.substring(calcText.length - 1)
 
         if (input == "AC" || calcText == "Infinity" || calcText == "NaN") {
-            resultView.setText("0")
+            resultView.text = "0"
             expression = ""
         } else {
             if ((lastItem in "÷+-×") && (input != ".")) {
-                resultView.setText(calcText.substring(0, calcText.length - 1))
+                resultView.text = calcText.substring(0, calcText.length - 1)
                 expression = "" + expression.substring(0, expression.length - 1)
             }
             if (input == "÷") {
@@ -95,10 +95,10 @@ class MainActivity : AppCompatActivity() {
                 }
             } else if (input == "⌫") {
                 if (calcText.length == 1) {
-                    resultView.setText("0")
+                    resultView.text = "0"
                     expression = ""
                 } else {
-                    resultView.setText(calcText.substring(0, calcText.length - 1))
+                    resultView.text = calcText.substring(0, calcText.length - 1)
                     expression = "" + expression.substring(0, expression.length - 1)
                 }
             } else if (input == "=") {
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         resultView.text = longResult.toString()
                     else
                         resultView.text = result.toFloat().toString()
-                    expression = resultView.getText().toString()
+                    expression = resultView.text.toString()
                     answer = 0
                 } catch (e: Exception) {
                     Toast.makeText(this, "Error!!", Toast.LENGTH_LONG).show()
